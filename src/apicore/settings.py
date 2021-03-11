@@ -57,8 +57,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# Code generators
+# https://github.com/Brobin/drf-generators
 INSTALLED_APPS_DEV = [
-       
 ]
 
 if DEBUG:

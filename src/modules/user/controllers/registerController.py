@@ -8,7 +8,7 @@ import io
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import AllowAny
 import rest_framework.status as  HTTPStatus
-from rest_framework.response import Response
+from rest_framework.response import Response as RestResponse
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 
@@ -40,24 +40,23 @@ class OauthRegister(APIView):
     }))
     def post(self, request, format=None):
         if request.method == "POST":
-            data = json.loads(request.body)
-            streamData = io.BytesIO(request.body)
-            parsedData = JSONParser().parse(streamData)
-            oldserializer = UserRegisterSerializer(data=parsedData) 
-            if oldserializer.is_valid():
-                newuser = oldserializer.save()
-                newuser.set_password(parsedData["password"])
+            streamData = request.data
+            dataserializer = UserRegisterSerializer(data=request.data) 
+            passwd = request.data["password"]
+            if dataserializer.is_valid():
+                newuser = dataserializer.save()
+                newuser.set_password(passwd)
                 newuser.save()
                 group = Group.objects.get(name='user_permission')
                 newuser.groups.add(group)
-                status_code = HTTPStatus.OK
-                response = response({'success': 'true',"message":"user created"},status=status_code)
+                status_code = HTTPStatus.HTTP_200_OK
+                response = RestResponse({'success': 'true',"message":"user created"},status=status_code)
                 return response
             else:
-                status_code = HTTPStatus.OK
-                response = response({'success': 'false',"message":"user not created"},status=status_code)
+                status_code = HTTPStatus.HTTP_200_OK
+                response = RestResponse({'success': 'false',"message":"user not created"},status=status_code)
                 return response
         else:
-            status_code = HTTPStatus.METHOD_NOT_ALLOWED
-            response = response({'success': 'false'},status=status_code)
+            status_code = HTTPStatus.HTTP_405_METHOD_NOT_ALLOWED
+            response = RestResponse({'success': 'false'},status=status_code)
             return response
