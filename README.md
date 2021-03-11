@@ -1,1 +1,1 @@
-# Django Template to be used by ACS
+# Django Template to be used in ACS
