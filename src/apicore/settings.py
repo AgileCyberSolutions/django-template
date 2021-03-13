@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from .database import database_setting, database_apps 
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,15 +41,17 @@ INSTALLED_APPS = [
     # our custom apps
     'modules.user',
     'modules.sample',
+    # basic
+    'rest_framework.authtoken',
+    #jwt
+    #'rest_framework_simplejwt.token_blacklist',
     #oauth
-    'oauth2_provider',
-    'corsheaders',
+    #'oauth2_provider', 
     # swagger
     'drf_yasg',
     # for rest framework
     'rest_framework', 
-    'rest_framework.authtoken', 
-    'rest_framework_jwt',    
+    'corsheaders',    
     # default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,6 +60,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+INSTALLED_APPS.extend(database_apps)
+
+
 
 # Code generators
 # https://github.com/Brobin/drf-generators
@@ -86,13 +94,19 @@ REST_FRAMEWORK = {
       'rest_framework.permissions.IsAuthenticated', 
   ), 
   'DEFAULT_AUTHENTICATION_CLASSES': ( 
-      'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    #  'rest_framework.authentication.TokenAuthentication',
+    #  'rest_framework_simplejwt.authentication.JWTAuthentication',
+    #  'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+     'rest_framework.authentication.TokenAuthentication',
    #   'rest_framework_jwt.authentication.JSONWebTokenAuthentication', 
    #   'rest_framework.authentication.SessionAuthentication', 
-   #   'rest_framework.authentication.BasicAuthentication', 
+    #  'rest_framework.authentication.BasicAuthentication', 
   ), 
 } 
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 TEMPLATES = [
     {
@@ -116,12 +130,8 @@ WSGI_APPLICATION = 'apicore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+#imported from database.py file
+DATABASES = database_setting
 
 
 # Password validation

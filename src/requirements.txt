@@ -1,12 +1,11 @@
 django==3.1.7
 djangorestframework
-djangorestframework-jwt
 gunicorn
 psycopg2
 markdown
 django-filter
 django-cors-headers
+django-cors-middleware
 drf-yasg
 django-oauth-toolkit
-django-cors-middleware
-mysqlclient
+djangorestframework_simplejwt

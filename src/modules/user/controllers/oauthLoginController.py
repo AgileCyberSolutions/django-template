@@ -69,7 +69,7 @@ class OauthLogin(APIView,TokenView):
             "token_type":"Bearer"},status=HTTPStatus.HTTP_200_OK)
         else:
             status_code = HTTPStatus.METHOD_NOT_ALLOWED
-            response = JsonResponse({'success': 'false'},status=status_code)
+            response = Response({'success': 'false'},status=status_code)
             return response
 
 
@@ -115,7 +115,7 @@ class OauthRenewLogin(APIView,TokenView):
             "token_type":"Bearer"},status=HTTPStatus.HTTP_200_OK)
         else:
             status_code = HTTPStatus.METHOD_NOT_ALLOWED
-            response = JsonResponse({'success': 'false'},status=status_code)
+            response = Response({'success': 'false'},status=status_code)
             return response
 
 class OauthLogout(APIView,TokenView):
@@ -137,8 +137,8 @@ class OauthLogout(APIView,TokenView):
             for refToken in refTokensModel.iterator():
                 refToken.delete()
             accToken.revoke()
-            return Response({'done':'no'},status=HTTPStatus.HTTP_200_OK)
+            return Response({'success':'true'},status=HTTPStatus.HTTP_200_OK)
         else:
             status_code = HTTPStatus.METHOD_NOT_ALLOWED
-            response = JsonResponse({'success': 'false'},status=status_code)
+            response = Response({'success': 'false'},status=status_code)
             return response;
